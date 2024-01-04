@@ -18,7 +18,19 @@ configurations {
 }
 
 repositories {
-	mavenCentral()
+        maven {
+            name = "GitHubPackages"
+            url = uri("https://maven.pkg.github.com/Global-Phantasm/gp-user-service")
+            credentials {
+                username = project.findProperty("gpr.user") ?: System.getenv("USERNAME")
+                password = project.findProperty("gpr.key") ?: System.getenv("TOKEN")
+            }
+        }
+}
+publications {
+	bootJava(MavenPublication) {
+		artifact tasks.named("bootJar")
+	}
 }
 
 dependencies {
@@ -30,4 +42,11 @@ dependencies {
 
 tasks.named('test') {
 	useJUnitPlatform()
+}
+0tasks.named("bootJar") {
+	archiveClassifier = 'boot'
+}
+
+tasks.named("jar") {
+	archiveClassifier = ''
 }
